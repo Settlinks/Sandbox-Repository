@@ -324,3 +324,13 @@
           <div style="text-align:center;padding:60px 0">
             <div style="font-size:2rem;color:#dc2626;opacity:.4;margin-bottom:12px"><i class="fas fa-triangle-exclamation"></i></div>
             <p style="font-size:.9rem;color:var(--slate-light)">${e.message}</p>
+          </div>`;
+        showToast('Error de conexión: ' + e.message, 'error');
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fas fa-search"></i> Buscar mi cita';
+      }
+    }
+  </script>
+</body>
+</html>
