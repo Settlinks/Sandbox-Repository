@@ -3,8 +3,8 @@
    Central API gateway + UI utilities (Toast, Offline, Validation)
    ================================================================ */
 
-const API_URL = "https://script.google.com/macros/s/AKfycbxAWvbo5M8TLh8blA0Q43uJ0RxyFO3pqFEzkOho6Z2GO-69qcvbgRKCWJp50aLxC0Qfzw/exec";
-const DRIVE_FOLDER_ID = "1mI5-0o93XE5i1_w8FlpfyiyhaBpKtaFd";
+const API_URL = "https://tinyurl.com/22aexuz9";
+const DRIVE_FOLDER_ID = "12It2DNPQVwRI4ZDfXgfvqMlCgaAsjk4-";
 
 /* ── Session ──────────────────────────────────────────────── */
 const Session = {
