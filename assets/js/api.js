@@ -10,8 +10,8 @@
    HOW TO UPDATE (e.g. after redeploying your GAS script):
    ─────────────────────────────────────────────────────────
    1. Open Chrome / Edge / Firefox on ANY webpage.
-   2. Press F12 to open DevTools → click the "Console" tab.
-   3. Paste ONE of the lines below (with your new value) and press Enter:
+   2. Press F12 → click the Console tab.
+   3. Paste the line below (with your new value) and press Enter:
 
       For a new GAS URL:
         Array.from("PASTE_YOUR_NEW_GAS_URL_HERE").map((c,i)=>c.charCodeAt(0)^[79,83,82,69,72,65,66,50,48,50,53][i%11])
@@ -19,23 +19,19 @@
       For a new Drive Folder ID:
         Array.from("PASTE_YOUR_NEW_FOLDER_ID_HERE").map((c,i)=>c.charCodeAt(0)^[79,83,82,69,72,65,66,50,48,50,53][i%11])
 
-   4. The console will print an array like [39,39,38,53,...].
-   5. Copy that array and replace _EU (for GAS URL) or _EF (for Folder ID) below.
-   6. Save the file and push to GitHub. Done.
+   4. Copy the printed array and replace _EU or _EF below.
    ================================================================ */
-
-// XOR key — do not change this
 const _k = [79,83,82,69,72,65,66,50,48,50,53];
-const _d = b => b.map((v,i) => String.fromCharCode(v ^ _k[i % _k.length])).join('');
+const _d = b => b.map((v,i) => String.fromCharCode(v ^ _k[i % _k.length])).join("");
 
-// Encoded GAS endpoint  →  decoded value: https://script.google.com/macros/s/…/exec
-const _EU = [39,39,38,53,59,123,109,29,68,91,91,54,38,32,41,102,34,45,95,31,0,7,46,54,42,48,50,120];
+// Encoded GAS endpoint
+const [39,39,38,53,59,123,109,29,68,91,91,54,38,32,41,102,34,45,95,31,0,7,46,54,42,48,50,120] = [39,39,38,53,59,123,109,29,67,81,71,38,35,38,107,47,46,45,85,92,87,27,44,60,63,106,37,32,33,64,95,65,26,60,124,19,14,46,56,33,80,72,115,98,57,49,61,112,5,121,22,126,88,10,87,35,18,98,20,124,114,55,120,0,96,77,54,21,29,118,56,48,4,119,74,89,122,39,60,100,31,122,6,13,31,6,11,68,44,37,48,34,26,10,1,101,122,66,0,127,50,30,61,11,113,19,84,74,69,26,42,43,55,38];
 
-// Encoded Drive Folder ID  →  decoded value: 1mI5-0o93XE5i1_w8FlpfyiyhaBpKtaFd
-const _EF = [126,97,27,49,122,5,12,98,97,100,66,29,26,102,31,12,39,26,85,86,68,68,2,63,17,34,41,0,49,88,91,6,24];
+// Encoded Drive Folder ID
+const [126,97,27,49,122,5,12,98,97,100,66,29,26,102,31,12,39,26,85,86,68,68,2,63,17,34,41,0,49,88,91,6,24] = [126,62,27,112,101,113,45,11,3,106,112,122,58,99,26,63,121,4,94,64,84,76,38,42,58,36,10,49,9,70,81,116,81];
 
-const API_URL         = _d(_EU);
-const DRIVE_FOLDER_ID = _d(_EF);
+const API_URL         = _d([39,39,38,53,59,123,109,29,68,91,91,54,38,32,41,102,34,45,95,31,0,7,46,54,42,48,50,120]);
+const DRIVE_FOLDER_ID = _d([126,97,27,49,122,5,12,98,97,100,66,29,26,102,31,12,39,26,85,86,68,68,2,63,17,34,41,0,49,88,91,6,24]);
 
 /* ── Session ──────────────────────────────────────────────── */
 const Session = {
