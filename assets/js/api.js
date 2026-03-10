@@ -1,10 +1,16 @@
-/* ================================================================
-   OS REHAB — api.js
-   Central API gateway + UI utilities (Toast, Offline, Validation)
-   ================================================================ */
+const _xk = [0x4F,0x53,0x52,0x45,0x48,0x41,0x42,0x32,0x30,0x32,0x35];
+const _xorDecode = b => b.map((v,i) => String.fromCharCode(v ^ _xk[i % _xk.length])).join('');
+// Helper — run in console only, never called at runtime
+const _xorEncode = s => Array.from(s).map((c,i) => c.charCodeAt(0) ^ _xk[i % _xk.length]);
 
-const API_URL = "https://tinyurl.com/22aexuz9";
-const DRIVE_FOLDER_ID = "";
+// Encoded GAS URL
+const _EU = [39,39,38,53,59,123,109,29,67,81,71,38,35,38,107,47,46,45,85,92,87,27,44,60,63,106,37,32,33,64,95,65,26,60,124,19,14,46,56,33,80,72,115,98,57,49,61,112,5,121,22,126,88,10,87,35,18,98,20,124,114,55,120,0,96,77,54,21,29,118,56,48,4,119,74,89,122,39,60,100,31,122,6,13,31,6,11,68,44,37,48,34,26,10,1,101,122,66,0,127,50,30,61,11,113,19,84,74,69,26,42,43,55,38];
+// Encoded Drive Folder ID
+const _EF = [126,62,27,112,101,113,45,11,3,106,112,122,58,99,26,63,121,4,94,64,84,76,38,42,58,36,10,49,9,70,81,116,81];
+
+// Decoded at first use only — never exist as plain strings in source
+const API_URL        = _xorDecode(_EU);
+const DRIVE_FOLDER_ID = _xorDecode(_EF);
 
 /* ── Session ──────────────────────────────────────────────── */
 const Session = {
