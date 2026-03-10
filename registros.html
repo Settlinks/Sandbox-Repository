@@ -230,8 +230,8 @@
           <p style="font-size:.8rem;color:var(--slate);line-height:1.7;margin-bottom:14px">
             Contáctanos antes de registrarte si necesitas orientación sobre nuestros tratamientos.
           </p>
-          <a href="/cdn-cgi/l/email-protection#2a4945445e4b495e456a4559584f424b4804494547" class="btn btn-outline btn-sm" style="text-decoration:none;display:inline-flex">
-            <i class="fas fa-envelope"></i> <span class="__cf_email__" data-cfemail="187b77766c797b6c7758776b6a7d70797a367b7775">[email&#160;protected]</span>
+          <a href="mailto:contacto@osrehab.com" class="btn btn-outline btn-sm" style="text-decoration:none;display:inline-flex">
+            <i class="fas fa-envelope"></i> contacto@osrehab.com
           </a>
         </div>
 
@@ -244,28 +244,22 @@
     </div>
   </div>
 
-  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script src="./assets/js/api.js"></script>
+  <script src="./assets/js/api.js"></script>
   <script>
-    /* ── Upload UI ─────────────────────────────────────────── */
+    /* ── Upload UI ──────────────────────────────────────────── */
     function onFileSelect(e) {
       const f = e.target.files[0];
       if (!f) return;
-
-      // Size guard
       if (f.size > 5 * 1024 * 1024) {
         showToast('El archivo supera 5 MB. Usa un enlace de Drive en su lugar.', 'warning', 6000);
         document.getElementById('archivoEstudio').value = '';
         return;
       }
-
-      // Show reading indicator
       const zone = document.getElementById('fileDropZone');
       zone.style.borderColor = 'var(--sand)';
       document.getElementById('fileDropContent').innerHTML = `
         <i class="fas fa-spinner fa-spin" style="font-size:1.8rem;color:var(--sand);display:block;margin-bottom:8px"></i>
         <p style="font-size:.82rem;font-weight:600;color:var(--slate)">Leyendo archivo…</p>`;
-
-      // Read & confirm
       const reader = new FileReader();
       reader.onload = () => {
         const icon  = f.type === 'application/pdf' ? 'fa-file-pdf' : 'fa-file-image';
@@ -295,7 +289,6 @@
       };
       reader.readAsDataURL(f);
     }
-
     function clearFile() {
       document.getElementById('archivoEstudio').value = '';
       const zone = document.getElementById('fileDropZone');
@@ -327,7 +320,6 @@
       const file = document.getElementById('archivoEstudio').files[0];
       if (file) {
         if (file.size > 5 * 1024 * 1024) return showToast('El archivo supera 5 MB. Usa un enlace de Drive.', 'warning');
-        // Show upload-in-progress state on the drop zone
         const zone = document.getElementById('fileDropZone');
         zone.style.borderColor = 'var(--teal)';
         document.getElementById('fileDropContent').innerHTML = `
@@ -354,7 +346,6 @@
         document.getElementById('successPanel').style.display = 'block';
         document.getElementById('registroForm') && document.getElementById('registroForm').reset();
         clearFile();
-        // Clear all validation states
         document.querySelectorAll('.input-field.valid,.input-field.error').forEach(el => el.classList.remove('valid','error'));
         document.querySelectorAll('.field-error-msg').forEach(el => el.remove());
         window.scrollTo({ top: 0, behavior: 'smooth' });
