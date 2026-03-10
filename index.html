@@ -22,9 +22,9 @@
     .cards-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 16px; }
 
     /* ── Patient autocomplete ── */
-    .pac-wrap { position: relative; }
+    .pac-wrap { position: relative; z-index: 10; }
     .pac-dropdown {
-      position: fixed; z-index: 9999;
+      position: absolute; top: calc(100% + 4px); left: 0; right: 0; z-index: 10;
       background: var(--cream-card); border: 1.5px solid var(--teal);
       border-radius: var(--r-lg); box-shadow: var(--shadow-lg);
       max-height: 280px; overflow-y: auto;
@@ -57,6 +57,63 @@
       display: none;
     }
     .pac-clear-btn:hover { color: #dc2626; background: #fef2f2; }
+
+    /* ── Tab bar ── */
+    .tab-bar { display:flex; gap:4px; border-bottom:2px solid var(--border-soft); margin-bottom:24px; }
+    .tab-btn {
+      padding:10px 20px; font-size:.76rem; font-weight:700; letter-spacing:.07em;
+      text-transform:uppercase; border:none; background:none; cursor:pointer;
+      color:var(--slate-light); border-bottom:3px solid transparent; margin-bottom:-2px;
+      transition:var(--transition); border-radius:var(--r-sm) var(--r-sm) 0 0;
+      display:flex; align-items:center; gap:7px; white-space:nowrap;
+    }
+    .tab-btn:hover  { color:var(--teal); background:var(--teal-mist); }
+    .tab-btn.active { color:var(--teal); border-bottom-color:var(--teal); }
+    .tab-badge { background:var(--teal); color:#fff; border-radius:20px; padding:1px 7px; font-size:.6rem; font-weight:800; }
+
+    /* ── Patient table ── */
+    .pt-wrap  { overflow-x:auto; border-radius:var(--r-lg); border:1px solid var(--border-soft); -webkit-overflow-scrolling:touch; }
+    .pt-table { width:100%; border-collapse:collapse; font-size:.82rem; min-width:860px; }
+    .pt-table th { background:var(--teal-dark); color:#fff; padding:11px 14px; text-align:left; font-size:.65rem; font-weight:700; letter-spacing:.09em; text-transform:uppercase; white-space:nowrap; }
+    .pt-table th:first-child { border-radius:var(--r-sm) 0 0 0; }
+    .pt-table th:last-child  { border-radius:0 var(--r-sm) 0 0; }
+    .pt-table td { padding:11px 14px; border-bottom:1px solid var(--border-soft); vertical-align:middle; }
+    .pt-table tr:last-child td { border-bottom:none; }
+    .pt-table tr:hover td { background:var(--teal-mist); transition:.15s; }
+    .pt-table .mono    { font-family:monospace; font-size:.75rem; color:var(--teal-dark); font-weight:700; }
+    .pt-table .pt-name { font-weight:700; color:var(--obsidian); white-space:nowrap; }
+    .pt-table .allergy { color:#c2410c; font-weight:600; font-size:.75rem; }
+
+    /* ── Patient detail modal ── */
+    .detail-overlay { position:fixed; inset:0; background:rgba(0,0,0,.55); z-index:1000; display:flex; align-items:center; justify-content:center; padding:16px; overflow-y:auto; }
+    .detail-box { background:var(--cream-card); border-radius:var(--r-2xl); box-shadow:var(--shadow-lg); width:100%; max-width:880px; margin:auto; animation:slideUp .3s cubic-bezier(.22,1,.36,1); }
+    .detail-header { background:linear-gradient(135deg,var(--teal-dark),var(--teal)); padding:24px 28px; border-radius:var(--r-2xl) var(--r-2xl) 0 0; display:flex; justify-content:space-between; align-items:flex-start; gap:12px; }
+    .detail-section { padding:20px 28px; border-bottom:1px solid var(--border-soft); }
+    .detail-section:last-child { border-bottom:none; }
+    .detail-stitle { font-size:.65rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; margin-bottom:16px; display:flex; align-items:center; gap:7px; }
+    .detail-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(170px,1fr)); gap:14px; }
+    .detail-field label { font-size:.62rem; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--slate-light); display:block; margin-bottom:3px; }
+    .detail-field span  { font-size:.86rem; font-weight:600; color:var(--obsidian); display:block; line-height:1.4; word-break:break-word; }
+    .appt-row { display:grid; grid-template-columns:110px 70px 1fr 1fr 110px; gap:8px; padding:10px 14px; border-radius:var(--r-md); background:var(--cream); border:1px solid var(--border-soft); align-items:center; font-size:.8rem; }
+    .emerg-card { background:#fef2f2; border:1px solid #fecaca; border-radius:var(--r-lg); padding:16px 20px; display:flex; gap:16px; align-items:center; flex-wrap:wrap; }
+
+    /* ── Mobile ── */
+    @media (max-width:768px) {
+      .pac-dropdown { max-height:220px; }
+      .tab-btn { padding:9px 13px; font-size:.7rem; }
+    }
+    @media (max-width:600px) {
+      main { padding:14px 12px !important; }
+      .appt-row { grid-template-columns:1fr 1fr; gap:6px; }
+      .detail-section { padding:16px 16px; }
+      .detail-header  { padding:18px 16px; }
+      .detail-grid { grid-template-columns:1fr 1fr; }
+      .tab-btn { padding:8px 10px; font-size:.68rem; }
+    }
+    @media (max-width:400px) {
+      .detail-grid { grid-template-columns:1fr; }
+      .appt-row { grid-template-columns:1fr; }
+    }
   </style>
 </head>
 <body>
@@ -144,12 +201,12 @@
   </nav>
 
   <!-- Main content -->
-  <main style="padding:28px 32px;max-width:1800px;margin:0 auto;position:relative;z-index:1">
+  <main style="padding:28px 32px;max-width:1800px;margin:0 auto;position:relative">
 
     <!-- Page header -->
     <div style="margin-bottom:28px" class="page-enter">
       <p class="section-eyebrow">Panel de control</p>
-      <h1 class="section-title">Gestión de Citas</h1>
+      <h1 class="section-title">Gestión de Citas y Pacientes</h1>
     </div>
 
     <!-- Stats -->
@@ -160,8 +217,22 @@
       <div class="skeleton" style="height:88px;border-radius:18px"></div>
     </div>
 
+    <!-- Tab bar -->
+    <div class="tab-bar page-enter stagger-2" style="margin-top:28px">
+      <button class="tab-btn active" onclick="switchTab('citas')" id="tabCitas">
+        <i class="fas fa-calendar-alt"></i> Citas
+      </button>
+      <button class="tab-btn" onclick="switchTab('pacientes')" id="tabPacientes">
+        <i class="fas fa-users"></i> Expedientes de Pacientes
+        <span class="tab-badge" id="ptBadge" style="display:none"></span>
+      </button>
+    </div>
+
+    <!-- ══ CITAS PANEL ══ -->
+    <div id="panelCitas">
+
     <!-- New appointment form -->
-    <div class="card page-enter stagger-2" style="padding:20px 24px;margin:24px 0">
+    <div class="card page-enter stagger-2" style="padding:20px 24px;margin:24px 0;position:relative;z-index:10">
       <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px">
         <div style="width:6px;height:6px;border-radius:50%;background:var(--teal)"></div>
         <p class="section-eyebrow" style="margin-bottom:0">Nueva cita</p>
@@ -239,6 +310,50 @@
         </div>
       </div>
     </div>
+    </div><!-- /#panelCitas -->
+
+    <!-- ══ PACIENTES PANEL ══ -->
+    <div id="panelPacientes" style="display:none">
+      <div class="card page-enter" style="padding:24px">
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:20px">
+          <div>
+            <h3 style="font-size:1rem;font-weight:700;color:var(--obsidian)">Expedientes de Pacientes</h3>
+            <p style="font-size:.75rem;color:var(--slate-light);margin-top:2px">
+              <i class="fas fa-lock" style="margin-right:4px;opacity:.5"></i>Visible solo para administradores autenticados
+            </p>
+          </div>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+            <div class="search-bar" style="max-width:340px">
+              <i class="fas fa-search search-icon"></i>
+              <input type="text" id="ptSearchInput" class="input-field" placeholder="Buscar nombre, ID, email…" onkeyup="filtrarPacientes()">
+            </div>
+            <span id="ptCount" class="badge badge-teal" style="white-space:nowrap"></span>
+            <button onclick="cargarPacientesTabla()" class="btn btn-ghost btn-sm">
+              <i class="fas fa-rotate-right"></i> Actualizar
+            </button>
+          </div>
+        </div>
+        <div class="pt-wrap">
+          <table class="pt-table">
+            <thead>
+              <tr>
+                <th>ID</th><th>Paciente</th><th>Edad</th><th>Género</th>
+                <th>Teléfono</th><th>Email</th><th>Seguro</th><th>Alergias</th>
+                <th>Emergencia</th><th>Registro</th><th>Estatus</th>
+                <th style="text-align:center">Archivo</th>
+                <th style="text-align:center">Expediente</th>
+              </tr>
+            </thead>
+            <tbody id="ptTableBody">
+              <tr><td colspan="13" style="text-align:center;padding:48px;color:var(--slate-light)">
+                <i class="fas fa-spinner fa-spin" style="margin-right:8px"></i>Cargando expedientes…
+              </td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
   </main>
 </div>
 
@@ -265,11 +380,56 @@
 </div>
 
 
+<!-- ══ PATIENT DETAIL MODAL ══ -->
+<div id="ptDetailModal" class="detail-overlay" style="display:none" onclick="if(event.target===this)closePtDetail()">
+  <div class="detail-box">
+    <div class="detail-header">
+      <div style="min-width:0;flex:1">
+        <p style="font-size:.64rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.6);margin-bottom:5px">Expediente del Paciente</p>
+        <h2 id="detailName" style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;font-style:italic;color:#fff;margin-bottom:3px;word-break:break-word;line-height:1.2"></h2>
+        <span id="detailId" style="font-family:monospace;font-size:.78rem;color:rgba(255,255,255,.65)"></span>
+      </div>
+      <button onclick="closePtDetail()" style="width:38px;height:38px;min-width:38px;border-radius:10px;background:rgba(255,255,255,.15);border:none;color:#fff;cursor:pointer;font-size:1rem">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+    <div class="detail-section">
+      <p class="detail-stitle" style="color:var(--teal)"><i class="fas fa-user"></i>Datos Personales</p>
+      <div class="detail-grid" id="detailPersonal"></div>
+    </div>
+    <div class="detail-section">
+      <p class="detail-stitle" style="color:#dc2626"><i class="fas fa-phone-alt"></i>Contacto de Emergencia</p>
+      <div id="detailEmergency"></div>
+    </div>
+    <div class="detail-section">
+      <p class="detail-stitle" style="color:var(--sand)"><i class="fas fa-notes-medical"></i>Historial Clínico</p>
+      <div class="detail-grid" id="detailClinical"></div>
+    </div>
+    <div class="detail-section">
+      <p class="detail-stitle" style="color:var(--teal)"><i class="fas fa-file-medical"></i>Documentos / Estudios</p>
+      <div id="detailDocs"></div>
+    </div>
+    <div class="detail-section">
+      <p class="detail-stitle" style="color:var(--teal)"><i class="fas fa-calendar-check"></i>Historial de Citas</p>
+      <div id="detailAppts" style="display:flex;flex-direction:column;gap:8px;overflow-x:auto"></div>
+    </div>
+    <div style="padding:20px 28px;background:var(--cream);border-radius:0 0 var(--r-2xl) var(--r-2xl)">
+      <button onclick="closePtDetail()" class="btn btn-primary" style="width:100%">
+        <i class="fas fa-times"></i> Cerrar expediente
+      </button>
+    </div>
+  </div>
+</div>
+
+
 <script src="./assets/js/api.js"></script>
 <script>
 /* ── State ──────────────────────────────────────────────────── */
-let todasLasCitas = [];
+let todasLasCitas   = [];
+let todosPacientes  = [];
+let ptFiltrados     = [];
 let pendingDeleteId = null;
+let ptPanelLoaded   = false;
 
 /* ── Boot ───────────────────────────────────────────────────── */
 window.addEventListener('DOMContentLoaded', () => {
@@ -302,6 +462,15 @@ async function login() {
 }
 
 function logout() { Session.clear(); location.reload(); }
+
+/* ── Tab switching ──────────────────────────────────────────── */
+function switchTab(tab) {
+  document.getElementById('panelCitas').style.display     = tab === 'citas'     ? '' : 'none';
+  document.getElementById('panelPacientes').style.display = tab === 'pacientes' ? '' : 'none';
+  document.getElementById('tabCitas').classList.toggle('active',     tab === 'citas');
+  document.getElementById('tabPacientes').classList.toggle('active', tab === 'pacientes');
+  if (tab === 'pacientes' && !ptPanelLoaded) cargarPacientesTabla();
+}
 
 /* ── Boot app ───────────────────────────────────────────────── */
 function bootApp(s) {
@@ -520,7 +689,157 @@ function errorState(msg) {
     <div style="color:#dc2626;opacity:.4;font-size:2.5rem;margin-bottom:12px"><i class="fas fa-triangle-exclamation"></i></div>
     <p style="color:var(--slate-light);font-size:.9rem">${msg}</p>
   </div>`;
-}/* ══════════════════════════════════════════════════════════
+}
+
+/* ══════════════════════════════════════════════════════════
+   PATIENT TABLE PANEL
+   col: 0=ID 1=Nombre 2=Email 3=Tel 4=FechaNac 5=Genero
+        6=Antecedentes 7=Motivo 8=Alergias 9=Seguro
+        10=EmergNombre 11=EmergTel 12=EmergRelacion
+        13=UrlArchivo 14=FechaRegistro 15=Estatus
+══════════════════════════════════════════════════════════ */
+async function cargarPacientesTabla() {
+  ptPanelLoaded = true;
+  const tbody = document.getElementById('ptTableBody');
+  tbody.innerHTML = `<tr><td colspan="13" style="text-align:center;padding:48px;color:var(--slate-light)">
+    <i class="fas fa-spinner fa-spin" style="margin-right:8px"></i>Cargando expedientes…</td></tr>`;
+  try {
+    const res = await apiPost('LEER_PACIENTES');
+    todosPacientes = (Array.isArray(res) ? res.slice(1) : []).filter(r => r[0] && r[1]);
+    ptFiltrados = [...todosPacientes];
+    renderPtTable(ptFiltrados);
+    const n = todosPacientes.length;
+    document.getElementById('ptCount').textContent = `${n} paciente${n!==1?'s':''}`;
+    const badge = document.getElementById('ptBadge');
+    badge.textContent = n; badge.style.display = n ? '' : 'none';
+    pacientes = [...todosPacientes]; // sync autocomplete list
+  } catch(e) {
+    tbody.innerHTML = `<tr><td colspan="13" style="text-align:center;padding:48px;color:#dc2626">
+      <i class="fas fa-triangle-exclamation" style="margin-right:8px"></i>${e.message}</td></tr>`;
+    showToast('Error al cargar pacientes: ' + e.message, 'error');
+  }
+}
+
+function calcEdad(fNac) {
+  if (!fNac) return '—';
+  const n = new Date(fNac), h = new Date();
+  if (isNaN(n)) return '—';
+  let a = h.getFullYear() - n.getFullYear();
+  if (h.getMonth() < n.getMonth() || (h.getMonth()===n.getMonth() && h.getDate()<n.getDate())) a--;
+  return a + ' años';
+}
+
+function renderPtTable(rows) {
+  const tbody = document.getElementById('ptTableBody');
+  if (!rows.length) {
+    tbody.innerHTML = `<tr><td colspan="13" style="text-align:center;padding:48px;color:var(--slate-light)">
+      <i class="fas fa-users-slash" style="margin-right:8px"></i>No se encontraron pacientes.</td></tr>`;
+    return;
+  }
+  tbody.innerHTML = rows.map((r, i) => {
+    const tieneDoc = r[13] && String(r[13]).startsWith('http');
+    const gLabel   = r[5]==='M' ? 'Masculino' : r[5]==='F' ? 'Femenino' : (r[5]||'—');
+    return `<tr>
+      <td class="mono">${r[0]||'—'}</td>
+      <td class="pt-name">${r[1]||'—'}</td>
+      <td style="white-space:nowrap">${calcEdad(r[4])}</td>
+      <td>${gLabel}</td>
+      <td style="white-space:nowrap">${r[3]||'—'}</td>
+      <td style="font-size:.75rem">${r[2]||'—'}</td>
+      <td style="font-size:.78rem">${r[9]||'—'}</td>
+      <td style="color:#c2410c;font-weight:600;font-size:.75rem">${r[8]||'—'}</td>
+      <td style="font-size:.76rem;white-space:nowrap">
+        ${r[10] ? `<span style="font-weight:600">${r[10]}</span><br><span style="color:var(--slate-light)">${r[11]||''}</span>` : '—'}
+      </td>
+      <td style="font-size:.72rem;color:var(--slate-light);white-space:nowrap">${r[14]?String(r[14]).slice(0,10):'—'}</td>
+      <td><span class="badge ${r[15]==='Activo'?'badge-done':'badge-pending'}" style="font-size:.6rem">${r[15]||'—'}</span></td>
+      <td style="text-align:center">
+        ${tieneDoc
+          ? `<a href="${r[13]}" target="_blank" class="btn btn-ghost btn-sm" title="Ver documento"><i class="fas fa-file-medical" style="color:var(--teal)"></i></a>`
+          : `<span style="color:var(--border-soft)">—</span>`}
+      </td>
+      <td style="text-align:center">
+        <button onclick="verExpediente(${i})" class="btn btn-primary btn-sm"><i class="fas fa-folder-open"></i> Ver</button>
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+function filtrarPacientes() {
+  const q = document.getElementById('ptSearchInput').value.toLowerCase();
+  ptFiltrados = todosPacientes.filter(r =>
+    [r[0],r[1],r[2],r[3],r[7]].some(v => String(v||'').toLowerCase().includes(q))
+  );
+  const n = ptFiltrados.length;
+  document.getElementById('ptCount').textContent = `${n} paciente${n!==1?'s':''}`;
+  renderPtTable(ptFiltrados);
+}
+
+function verExpediente(idx) {
+  const r = ptFiltrados[idx];
+  if (!r) return;
+  const gLabel = r[5]==='M' ? 'Masculino' : r[5]==='F' ? 'Femenino' : (r[5]||'—');
+
+  document.getElementById('detailName').textContent = r[1]||'—';
+  document.getElementById('detailId').textContent   = r[0]||'';
+
+  document.getElementById('detailPersonal').innerHTML = [
+    ['ID Paciente', r[0]||'—'], ['Nombre', r[1]||'—'],
+    ['Correo',      r[2]||'—'], ['Teléfono', r[3]||'—'],
+    ['Nacimiento',  r[4]||'—'], ['Edad', calcEdad(r[4])],
+    ['Género',      gLabel],    ['Seguro', r[9]||'—'],
+  ].map(([l,v]) => `<div class="detail-field"><label>${l}</label><span>${v}</span></div>`).join('');
+
+  document.getElementById('detailEmergency').innerHTML = `
+    <div class="emerg-card">
+      <div style="width:40px;height:40px;min-width:40px;background:#fecaca;border-radius:12px;display:flex;align-items:center;justify-content:center;color:#dc2626;font-size:1.1rem">
+        <i class="fas fa-phone-alt"></i>
+      </div>
+      <div>
+        <p style="font-size:.88rem;font-weight:700;color:var(--obsidian)">${r[10]||'—'}</p>
+        <p style="font-size:.8rem;color:var(--slate-light);margin-top:3px">${r[11]||'—'} &nbsp;·&nbsp; ${r[12]||'—'}</p>
+      </div>
+    </div>`;
+
+  document.getElementById('detailClinical').innerHTML = [
+    ['Alergias',      r[8]||'—'],
+    ['Antecedentes',  r[6]||'—'],
+    ['Motivo',        r[7]||'—'],
+  ].map(([l,v]) => `<div class="detail-field"><label>${l}</label><span style="white-space:pre-wrap">${v}</span></div>`).join('');
+
+  const tieneDoc  = r[13] && String(r[13]).startsWith('http');
+  const tieneLink = r[13] && !String(r[13]).startsWith('http') && String(r[13]).trim();
+  document.getElementById('detailDocs').innerHTML = tieneDoc
+    ? `<a href="${r[13]}" target="_blank" class="btn btn-primary" style="display:inline-flex"><i class="fas fa-external-link-alt"></i> Abrir documento en Drive</a>`
+    : tieneLink
+    ? `<a href="${r[13]}" target="_blank" class="btn btn-ghost" style="display:inline-flex"><i class="fas fa-link"></i> Abrir enlace externo</a>`
+    : `<p style="font-size:.82rem;color:var(--slate-light);font-style:italic">Sin documentos adjuntos.</p>`;
+
+  const nombreP = String(r[1]||'').toLowerCase().trim();
+  const citasP  = todasLasCitas.filter(c => String(c[2]||'').toLowerCase().trim() === nombreP);
+  const meses   = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+  document.getElementById('detailAppts').innerHTML = citasP.length
+    ? citasP.map(c => {
+        const d  = new Date(c[3]+'T00:00:00');
+        const ds = isNaN(d) ? c[3] : `${d.getDate()} ${meses[d.getMonth()]} ${d.getFullYear()}`;
+        const ok = c[6]==='Completada';
+        return `<div class="appt-row">
+          <span style="font-weight:700;color:var(--obsidian)">${ds}</span>
+          <span style="font-weight:700;color:var(--teal)">${c[4]||'—'}</span>
+          <span style="color:var(--slate)">${c[5]||'Sin especificar'}</span>
+          <span style="color:var(--slate-light);font-size:.75rem">${c[1]||'—'}</span>
+          <span class="badge ${ok?'badge-done':'badge-pending'}" style="font-size:.6rem;justify-self:end">
+            ${ok?'<i class="fas fa-check"></i>':'<i class="fas fa-hourglass-half"></i>'} ${c[6]}
+          </span>
+        </div>`;
+      }).join('')
+    : `<p style="font-size:.82rem;color:var(--slate-light);font-style:italic">No hay citas registradas para este paciente.</p>`;
+
+  document.getElementById('ptDetailModal').style.display = 'flex';
+}
+function closePtDetail() { document.getElementById('ptDetailModal').style.display = 'none'; }
+
+/* ══════════════════════════════════════════════════════════
    PATIENT AUTOCOMPLETE
    Patient sheet col map (from LEER_PACIENTES):
    0=ID  1=Nombre  2=Email  3=Tel  4=FechaNac  5=Genero
@@ -558,13 +877,6 @@ function pacOnInput(q) {
   ).slice(0, 8); // max 8 results
 
   if (!matches.length) { dd.style.display = 'none'; return; }
-
-  // Position dropdown using fixed coords so it escapes any stacking context
-  const inputEl = document.getElementById('formPaciente');
-  const rect = inputEl.getBoundingClientRect();
-  dd.style.top   = (rect.bottom + 4) + 'px';
-  dd.style.left  = rect.left + 'px';
-  dd.style.width = rect.width + 'px';
 
   dd.innerHTML = matches.map((r, i) => {
     const initials = String(r[1]||'?').split(' ').map(w=>w[0]||'').join('').slice(0,2).toUpperCase();
