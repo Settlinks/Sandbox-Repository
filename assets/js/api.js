@@ -4,7 +4,7 @@
    ================================================================ */
 
 const API_URL = "https://tinyurl.com/22aexuz9";
-const DRIVE_FOLDER_ID = "12It2DNPQVwRI4ZDfXgfvqMlCgaAsjk4-";
+const DRIVE_FOLDER_ID = "";
 
 /* ── Session ──────────────────────────────────────────────── */
 const Session = {
