@@ -1,392 +1,315 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registro de Pacientes - OS REHAB</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <style>
-        .input-premium { @apply w-full p-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-[#4b707b] outline-none transition-all bg-slate-50; }
-        .label-premium { @apply block text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1 ml-1; }
-
-        #dropZone {
-            border: 2px dashed #bfdbfe;
-            border-radius: 16px;
-            padding: 28px 20px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.2s;
-            background: #eff6ff;
-        }
-        #dropZone:hover, #dropZone.dragover {
-            border-color: #4b707b;
-            background: #e0f2fe;
-        }
-        #fileInfo {
-            display: none;
-            margin-top: 10px;
-            font-size: 12px;
-            color: #4b707b;
-            font-weight: bold;
-            background: #f0fdf4;
-            border: 1px solid #bbf7d0;
-            border-radius: 10px;
-            padding: 8px 12px;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Registro de Pacientes — OS REHAB</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="./assets/css/styles.css">
+  <style>
+    .page-wrap { max-width: 1100px; margin: 0 auto; padding: 40px 24px 80px; position: relative; z-index: 1; }
+    .two-col { display: grid; grid-template-columns: 1fr 340px; gap: 28px; align-items: start; }
+    @media (max-width: 900px) { .two-col { grid-template-columns: 1fr; } .sidebar-col { display: contents; } }
+    .sidebar-col > * { order: 10; }
+  </style>
 </head>
+<body>
 
-<body class="bg-[#F3E8D8] min-h-screen font-sans p-4 md:p-8">
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <img src="https://static.wixstatic.com/media/49ea47_e5efa3bc0ee848f6b691bb24765cb5f1~mv2.png" alt="OS Rehab">
+      <span class="navbar-tagline">Medical & Health</span>
+    </div>
+    <div class="navbar-nav">
+      <a href="./index"        class="nav-link"><i class="fas fa-lock"></i> <span>Admin</span></a>
+      <a href="./registros"    class="nav-link active"><i class="fas fa-user-plus"></i> <span>Registro</span></a>
+      <a href="./seguimiento"  class="nav-link"><i class="fas fa-search"></i> <span>Seguimiento</span></a>
+    </div>
+    <div></div>
+  </nav>
 
-    <div class="max-w-4xl mx-auto">
+  <div class="page-wrap">
 
-        <!-- Header -->
-        <div class="flex flex-col items-center mb-8 text-center">
-            <img src="https://static.wixstatic.com/media/49ea47_e5efa3bc0ee848f6b691bb24765cb5f1~mv2.png" alt="Logo" class="h-24 mb-2">
-            <h1 class="text-2xl font-black text-[#4b707b] italic">EXPEDIENTE DIGITAL DE PACIENTES</h1>
-            <p class="text-slate-500 text-sm">Por favor, completa los datos para iniciar tu historial clínico.</p>
-        </div>
-
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-
-            <!-- ── Main Form ── -->
-            <div class="lg:col-span-2 space-y-6">
-                <div class="bg-white p-6 md:p-8 rounded-[32px] shadow-xl border border-white">
-                    <form id="registroForm" class="space-y-5">
-
-                        <!-- PASO 1 -->
-                        <div class="flex items-center gap-2 mb-2">
-                            <div class="bg-[#4b707b] text-white text-xs font-black px-3 py-1 rounded-full">PASO 1</div>
-                            <span class="font-black text-slate-700 text-sm uppercase tracking-wide">Datos Personales</span>
-                        </div>
-
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div>
-                                <label class="label-premium">Nombre Completo</label>
-                                <input type="text" id="nombre" class="input-premium bg-slate-100 rounded-xl" placeholder=" Ej. Juan Pérez" required>
-                            </div>
-                            <div>
-                                <label class="label-premium">Correo Electrónico</label>
-                                <input type="email" id="email" class="input-premium bg-slate-100 rounded-xl" placeholder=" correo@ejemplo.com" required>
-                            </div>
-                        </div>
-
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                            <div>
-                                <label class="label-premium">Teléfono</label>
-                                <input type="tel" id="telefono" class="input-premium bg-slate-100 rounded-xl" placeholder=" 55 1234 5678">
-                            </div>
-                            <div>
-                                <label class="label-premium">Fecha de Nacimiento</label>
-                                <input type="date" id="fechaNac" class="input-premium bg-slate-100 rounded-xl">
-                            </div>
-                            <div>
-                                <label class="label-premium">Género</label>
-                                <select id="genero" class="input-premium bg-slate-100 rounded-xl">
-                                    <option value="O">Seleccionar</option>
-                                    <option value="M">Masculino</option>
-                                    <option value="F">Femenino</option>
-                                    <option value="O">Otro</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <hr class="border-slate-100">
-
-                        <!-- PASO 2 -->
-                        <div class="flex items-center gap-2 mb-2">
-                            <div class="bg-[#4b707b] text-white text-xs font-black px-3 py-1 rounded-full">PASO 2</div>
-                            <span class="font-black text-slate-700 text-sm uppercase tracking-wide">Información Clínica</span>
-                        </div>
-
-                        <div>
-                            <label class="label-premium">Antecedentes Médicos / Lesiones Previas</label>
-                            <textarea id="antecedentes" class="input-premium h-20 w-full rounded-xl bg-slate-100" placeholder=" Cirugías, fracturas, alergias o enfermedades crónicas..."></textarea>
-                        </div>
-
-                        <div>
-                            <label class="label-premium">Motivo de la Consulta Actual</label>
-                            <input type="text" id="motivo" class="input-premium bg-slate-100 w-full rounded-xl" placeholder=" ¿Qué zona presenta dolor o molestia?">
-                        </div>
-
-                        <hr class="border-slate-100">
-
-                        <!-- PASO 3 -->
-                        <div class="flex items-center gap-2 mb-2">
-                            <div class="bg-[#4b707b] text-white text-xs font-black px-3 py-1 rounded-full">PASO 3</div>
-                            <span class="font-black text-slate-700 text-sm uppercase tracking-wide">Estudios y Documentos</span>
-                        </div>
-
-                        <div class="bg-blue-50 p-5 rounded-2xl border border-blue-100 space-y-4">
-                            <p class="text-xs text-blue-500 leading-relaxed">
-                                Comparte tus estudios de imagen (RX, resonancia, etc.) para que el fisioterapeuta los revise antes de tu sesión.
-                                Puedes usar un enlace de Google Drive o subir el archivo directamente.
-                            </p>
-
-                            <!-- Drive link -->
-                            <div>
-                                <label class="label-premium text-blue-600">Enlace a Carpeta de Drive / Dropbox</label>
-                                <div class="relative">
-                                    <i class="fas fa-link absolute left-3 top-3.5 text-blue-300"></i>
-                                    <input type="url" id="estudiosUrl" class="input-premium pl-10 border-blue-200 bg-white" placeholder="https://drive.google.com/...">
-                                </div>
-                            </div>
-
-                            <!-- Drop zone -->
-                            <div>
-                                <label class="label-premium text-blue-600">Sube tu Archivo Directamente</label>
-                                <div id="dropZone" onclick="document.getElementById('archivoEstudio').click()" ondragover="handleDragOver(event)" ondragleave="handleDragLeave()" ondrop="handleDrop(event)">
-                                    <input type="file" id="archivoEstudio" accept="image/*,.pdf" style="display:none" onchange="mostrarArchivo(this)">
-                                    <i class="fas fa-cloud-upload-alt text-3xl text-blue-300 mb-2 block"></i>
-                                    <p class="font-bold text-slate-600 text-sm">Haz clic para seleccionar</p>
-                                    <p class="text-xs text-slate-400 mt-1">PDF, JPG, PNG · Máximo 5 MB</p>
-                                </div>
-                                <div id="fileInfo">
-                                    <span class="text-green-600"><i class="fas fa-check-circle mr-1"></i></span>
-                                    <span id="fileName"></span>
-                                    <button type="button" onclick="clearFile()" class="ml-3 text-red-400 hover:text-red-600 text-xs">
-                                        <i class="fas fa-times-circle"></i> Quitar
-                                    </button>
-                                </div>
-                            </div>
-
-                            <p class="text-[11px] text-blue-400 italic">
-                                Si no cuentas con documentos digitales, preséntelos en físico el día de tu cita. No es obligatorio para continuar.
-                            </p>
-                        </div>
-
-                        <!-- Submit button -->
-                        <button type="button" id="btnRegistrar" onclick="registrarPaciente(event)"
-                            class="w-full bg-[#5E6D55] hover:bg-[#293e43] text-white p-5 rounded-2xl font-black shadow-lg transition transform active:scale-95 uppercase flex items-center justify-center gap-2">
-                            <i class="fas fa-user-plus"></i>
-                            Finalizar Registro de Paciente
-                        </button>
-
-                    </form>
-                </div>
-            </div>
-
-            <!-- ── Sidebar ── -->
-            <div class="space-y-6">
-                <div class="bg-white p-6 rounded-[32px] shadow-lg border-2 border-[#4b707b]/20">
-                    <div class="flex items-center gap-3 mb-4">
-                        <div class="bg-[#4b707b] text-white p-3 rounded-xl">
-                            <i class="fas fa-search-location text-xl"></i>
-                        </div>
-                        <h3 class="font-black text-slate-800 leading-tight">SEGUIMIENTO<br>DE CITA</h3>
-                    </div>
-                    <p class="text-xs text-slate-500 mb-4">¿Ya tienes una cita agendada? Consulta el estado de tu tratamiento aquí.</p>
-                    <button onclick="window.location.href='./seguimiento'"
-                        class="w-full bg-[#4b707b] text-white py-4 rounded-xl font-bold hover:bg-[#293e43] transition shadow-md">
-                        Seguimiento a Consulta <i class="fas fa-arrow-right ml-2"></i>
-                    </button>
-                </div>
-
-                <div class="bg-[#4b707b] p-6 rounded-[32px] text-white">
-                    <h4 class="font-bold mb-2"><i class="fas fa-info-circle mr-2"></i>¿Eres nuevo?</h4>
-                    <p class="text-xs opacity-80 leading-relaxed">Al registrarte, nuestros fisioterapeutas podrán revisar tus estudios previamente para optimizar el tiempo de tu sesión presencial.</p>
-                </div>
-
-                <div class="bg-white p-5 rounded-[24px] shadow border border-slate-100">
-                    <div class="flex items-center gap-2 mb-2">
-                        <i class="fas fa-shield-alt text-green-500"></i>
-                        <span class="text-xs font-black text-slate-600 uppercase tracking-wide">Datos Protegidos</span>
-                    </div>
-                    <p class="text-[11px] text-slate-400 leading-relaxed">Tu información es enviada de forma segura. Nunca compartimos tus datos con terceros.</p>
-                </div>
-            </div>
-
-        </div>
-
-        <!-- Back button -->
-        <div class="mt-6">
-            <button type="button" onclick="window.location.href='./index'"
-                class="w-full bg-slate-800 hover:bg-black text-white p-4 rounded-2xl font-bold transition uppercase text-sm">
-                <i class="fas fa-arrow-left mr-2"></i> Volver al administrador de citas
-            </button>
-        </div>
-
+    <!-- Hero header -->
+    <div style="text-align:center;margin-bottom:48px" class="page-enter">
+      <img src="https://static.wixstatic.com/media/49ea47_e5efa3bc0ee848f6b691bb24765cb5f1~mv2.png" alt="OS Rehab"
+           style="height:64px;width:auto;margin:0 auto 20px;display:block">
+      <p class="section-eyebrow">Clínica OS Rehab</p>
+      <h1 class="section-title" style="font-size:2.2rem">Expediente Digital de Pacientes</h1>
+      <p style="color:var(--slate-light);font-size:.9rem;margin-top:10px;max-width:460px;margin-left:auto;margin-right:auto">
+        Completa tu registro para que nuestros fisioterapeutas puedan revisar tu historial antes de tu primera sesión.
+      </p>
     </div>
 
-    <!-- ── Success Modal ── -->
-    <div id="modalExito" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center z-[200] p-4">
-        <div class="bg-white w-full max-w-sm rounded-[32px] overflow-hidden shadow-2xl">
-            <div class="bg-[#5E6D55] p-6 text-white text-center">
-                <div class="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-3">
-                    <i class="fas fa-check text-3xl"></i>
-                </div>
-                <h3 class="text-xl font-black uppercase italic">¡Registro Exitoso!</h3>
+    <div class="two-col">
+
+      <!-- ── FORM COLUMN ─────────────────────────────────────── -->
+      <div style="display:flex;flex-direction:column;gap:20px" class="page-enter stagger-1">
+
+        <!-- Success panel (hidden) -->
+        <div id="successPanel" style="display:none">
+          <div class="success-panel">
+            <div style="width:60px;height:60px;background:rgba(255,255,255,.15);border-radius:20px;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;font-size:1.5rem">
+              <i class="fas fa-check"></i>
             </div>
-            <div class="p-8 text-center space-y-3">
-                <p class="text-slate-500 text-sm">Tu expediente ha sido creado. Guarda tu ID de paciente:</p>
-                <div class="bg-slate-100 rounded-2xl p-4">
-                    <span id="idPacienteModal" class="text-2xl font-black text-[#4b707b] tracking-widest"></span>
-                </div>
-                <p class="text-xs text-slate-400">Necesitarás este código para dar seguimiento a tus consultas.</p>
+            <p style="font-size:.72rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;opacity:.7;margin-bottom:4px">Registro exitoso</p>
+            <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;font-style:italic;margin-bottom:6px">¡Bienvenido/a a OS REHAB!</h2>
+            <p style="font-size:.85rem;opacity:.8;margin-bottom:20px">Tu expediente ha sido creado. Guarda tu ID de paciente.</p>
+
+            <p style="font-size:.7rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;opacity:.6;margin-bottom:8px">Tu ID de paciente</p>
+            <div class="id-chip">
+              <span id="generatedId" style="font-size:1.6rem;letter-spacing:.15em"></span>
+              <button id="copyBtn" onclick="copyPatientId()" class="btn btn-icon" style="background:rgba(255,255,255,.2);color:#fff;width:36px;height:36px;border-radius:10px;font-size:.85rem" title="Copiar ID">
+                <i class="fas fa-copy"></i>
+              </button>
             </div>
-            <div class="p-6 bg-slate-50 border-t">
-                <button onclick="cerrarModal()"
-                    class="w-full py-4 bg-slate-800 text-white font-bold rounded-2xl hover:bg-black transition">
-                    ENTENDIDO
-                </button>
-            </div>
+            <p style="font-size:.75rem;opacity:.65;margin-top:16px;font-style:italic">
+              Presenta este ID en recepción o úsalo para identificar tu expediente en futuras visitas.
+            </p>
+          </div>
         </div>
+
+        <!-- Personal info -->
+        <div class="card" style="padding:28px">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:24px">
+            <div style="width:36px;height:36px;background:var(--teal-mist);border-radius:10px;display:flex;align-items:center;justify-content:center;color:var(--teal);font-size:.9rem">
+              <i class="fas fa-user"></i>
+            </div>
+            <div>
+              <p class="section-eyebrow" style="margin-bottom:0">Paso 1</p>
+              <h3 style="font-size:1rem;font-weight:700;color:var(--obsidian)">Datos personales</h3>
+            </div>
+          </div>
+
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+            <div style="grid-column:1/-1">
+              <label class="field-label">Nombre Completo *</label>
+              <input type="text" id="nombre" class="input-field" placeholder="Ej. María García López" required
+                     onblur="validateField(this,{required:true,minLen:3})">
+            </div>
+            <div>
+              <label class="field-label">Correo Electrónico *</label>
+              <input type="email" id="email" class="input-field" placeholder="correo@ejemplo.com" required
+                     onblur="validateField(this,{required:true,email:true})">
+            </div>
+            <div>
+              <label class="field-label">Teléfono</label>
+              <input type="tel" id="telefono" class="input-field" placeholder="55 1234 5678">
+            </div>
+            <div>
+              <label class="field-label">Fecha de Nacimiento</label>
+              <input type="date" id="fechaNac" class="input-field">
+            </div>
+            <div>
+              <label class="field-label">Género</label>
+              <select id="genero" class="input-field">
+                <option value="O">Prefiero no indicar</option>
+                <option value="M">Masculino</option>
+                <option value="F">Femenino</option>
+                <option value="O">Otro</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- Clinical info -->
+        <div class="card" style="padding:28px">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:24px">
+            <div style="width:36px;height:36px;background:#fff7ed;border-radius:10px;display:flex;align-items:center;justify-content:center;color:#c2410c;font-size:.9rem">
+              <i class="fas fa-notes-medical"></i>
+            </div>
+            <div>
+              <p class="section-eyebrow" style="margin-bottom:0;color:var(--sand)">Paso 2</p>
+              <h3 style="font-size:1rem;font-weight:700;color:var(--obsidian)">Historial clínico</h3>
+            </div>
+          </div>
+
+          <div style="display:flex;flex-direction:column;gap:16px">
+            <div>
+              <label class="field-label">Antecedentes Médicos / Lesiones Previas</label>
+              <textarea id="antecedentes" class="input-field" rows="3"
+                        placeholder="Cirugías, fracturas, alergias, enfermedades crónicas…"></textarea>
+            </div>
+            <div>
+              <label class="field-label">Motivo de la Consulta Actual *</label>
+              <input type="text" id="motivo" class="input-field" placeholder="¿Qué zona o molestia deseas tratar?"
+                     onblur="validateField(this,{required:true})">
+            </div>
+          </div>
+        </div>
+
+        <!-- Documents -->
+        <div class="card" style="padding:28px">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:24px">
+            <div style="width:36px;height:36px;background:var(--teal-mist);border-radius:10px;display:flex;align-items:center;justify-content:center;color:var(--teal);font-size:.9rem">
+              <i class="fas fa-file-medical"></i>
+            </div>
+            <div>
+              <p class="section-eyebrow" style="margin-bottom:0">Paso 3</p>
+              <h3 style="font-size:1rem;font-weight:700;color:var(--obsidian)">Estudios y documentos</h3>
+            </div>
+          </div>
+          <p style="font-size:.8rem;color:var(--slate-light);margin-bottom:20px;line-height:1.6">
+            Comparte tus estudios de imagen (RX, resonancia, etc.) para que el fisioterapeuta los revise antes de tu sesión. Puedes usar un enlace de Google Drive o subir el archivo directamente.
+          </p>
+
+          <div style="display:flex;flex-direction:column;gap:16px">
+            <div>
+              <label class="field-label">Enlace a carpeta de Drive / Dropbox</label>
+              <div style="position:relative">
+                <i class="fas fa-link" style="position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--slate-light);font-size:.8rem"></i>
+                <input type="url" id="estudiosUrl" class="input-field" placeholder="https://drive.google.com/…" style="padding-left:38px">
+              </div>
+            </div>
+            <div>
+              <label class="field-label">O sube tu archivo directamente</label>
+              <input type="file" id="archivoEstudio" accept="image/*,.pdf" onchange="onFileSelect(event)" style="display:none">
+              <div class="file-drop" id="fileDropZone"
+                   onclick="document.getElementById('archivoEstudio').click()"
+                   ondragover="event.preventDefault();this.classList.add('drag-active')"
+                   ondragleave="this.classList.remove('drag-active')"
+                   ondrop="event.preventDefault();this.classList.remove('drag-active');if(event.dataTransfer.files[0]){document.getElementById('archivoEstudio').files=event.dataTransfer.files;onFileSelect({target:document.getElementById('archivoEstudio')})}">
+                <div id="fileDropContent">
+                  <i class="fas fa-cloud-arrow-up" style="font-size:1.8rem;color:var(--teal);opacity:.5;display:block;margin-bottom:8px"></i>
+                  <p style="font-size:.82rem;font-weight:600;color:var(--slate)">Haz clic para seleccionar</p>
+                  <p style="font-size:.72rem;color:var(--slate-light);margin-top:4px">PDF, JPG, PNG · Máximo 5 MB</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <p style="font-size:.75rem;color:var(--slate-light);margin-top:14px;font-style:italic;line-height:1.6">
+            Si no cuentas con documentos digitales, preséntelos en físico el día de tu cita. No es obligatorio para continuar.
+          </p>
+        </div>
+
+        <!-- Submit -->
+        <button type="button" onclick="registrarPaciente()" id="btnRegistrar"
+                class="btn btn-sage btn-lg" style="width:100%">
+          <i class="fas fa-user-check"></i>
+          Finalizar Registro de Paciente
+        </button>
+
+      </div>
+
+      <!-- ── SIDEBAR ──────────────────────────────────────────── -->
+      <div class="sidebar-col" style="display:flex;flex-direction:column;gap:16px" class="page-enter stagger-2">
+
+        <!-- Info card -->
+        <div class="card" style="padding:24px;background:linear-gradient(145deg,var(--teal-dark),var(--teal));color:#fff;border:none">
+          <div style="width:40px;height:40px;background:rgba(255,255,255,.15);border-radius:12px;display:flex;align-items:center;justify-content:center;margin-bottom:14px;font-size:1rem">
+            <i class="fas fa-shield-heart"></i>
+          </div>
+          <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.2rem;font-style:italic;margin-bottom:8px;line-height:1.3">
+            ¿Por qué registrarme?
+          </h3>
+          <p style="font-size:.8rem;opacity:.85;line-height:1.7">
+            Al crear tu expediente digital, nuestros especialistas pueden revisar tu historial antes de tu sesión, optimizando el tiempo y personalizando tu tratamiento.
+          </p>
+        </div>
+
+        <!-- Seguimiento card -->
+        <div class="card" style="padding:24px">
+          <h4 style="font-size:.88rem;font-weight:700;color:var(--obsidian);margin-bottom:6px">
+            <i class="fas fa-search-location" style="color:var(--teal);margin-right:8px"></i>
+            Seguimiento de Cita
+          </h4>
+          <p style="font-size:.78rem;color:var(--slate-light);margin-bottom:16px;line-height:1.6">
+            ¿Ya tienes una cita confirmada? Consulta tu estado de tratamiento.
+          </p>
+          <a href="./seguimiento" class="btn btn-primary" style="width:100%;text-decoration:none;display:flex">
+            Consultar mi cita <i class="fas fa-arrow-right" style="margin-left:auto"></i>
+          </a>
+        </div>
+
+        <!-- Contact -->
+        <div class="card" style="padding:24px;background:var(--cream)">
+          <p style="font-size:.7rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--slate-light);margin-bottom:10px">¿Tienes dudas?</p>
+          <p style="font-size:.8rem;color:var(--slate);line-height:1.7;margin-bottom:14px">
+            Contáctanos antes de registrarte si necesitas orientación sobre nuestros tratamientos.
+          </p>
+          <a href="/cdn-cgi/l/email-protection#a5c6cacbd1c4c6d1cae5cad6d7c0cdc4c78bc6cac8" class="btn btn-outline btn-sm" style="text-decoration:none;display:inline-flex">
+            <i class="fas fa-envelope"></i> <span class="__cf_email__" data-cfemail="4b2824253f2a283f240b2438392e232a2965282426">[email&#160;protected]</span>
+          </a>
+        </div>
+
+        <!-- Back to admin -->
+        <a href="./index" class="btn btn-ghost" style="width:100%;text-decoration:none;display:flex;font-size:.75rem">
+          <i class="fas fa-arrow-left"></i> Volver al administrador
+        </a>
+
+      </div>
     </div>
+  </div>
 
-    <script>
-        // ─────────────────────────────────────────────────────────────────────
-        //  SECURITY LAYER
-        //
-        //  Problem: Sensitive identifiers (Drive Folder ID) must not appear as
-        //  plain strings in the source, since the repo is public on GitHub.
-        //
-        //  Solution applied here:
-        //    1. GAS URL  → already hidden behind a URL shortener (tinyurl).
-        //    2. Drive Folder ID → XOR-obfuscated. It is stored as an integer
-        //       array and only reconstructed in memory at the exact moment the
-        //       upload payload is built. It never exists as a readable string
-        //       in the source file or in static analysis tools.
-        //
-        //  Important note: this is obfuscation, not encryption. A determined
-        //  attacker who runs the JS can still recover the value. The real
-        //  protection is on the GAS side — the script should validate that
-        //  uploads come with a valid patient session and reject anonymous
-        //  calls. For a public-facing form this is the practical maximum
-        //  that can be achieved purely client-side.
-        //
-        //  HOW TO UPDATE THE FOLDER ID:
-        //    1. Open browser DevTools console on any page.
-        //    2. Paste: _encode("YOUR_NEW_FOLDER_ID") and press Enter.
-        //    3. Copy the printed array and replace _fid below.
-        // ─────────────────────────────────────────────────────────────────────
+  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script src="./assets/js/api.js"></script>
+  <script>
+    function onFileSelect(e) {
+      const f = e.target.files[0];
+      if (!f) return;
+      const icon = f.type === 'application/pdf' ? 'fa-file-pdf' : 'fa-file-image';
+      const color = f.type === 'application/pdf' ? '#dc2626' : '#2563eb';
+      document.getElementById('fileDropContent').innerHTML = `
+        <i class="fas ${icon}" style="font-size:1.8rem;color:${color};opacity:.8;display:block;margin-bottom:8px"></i>
+        <p style="font-size:.82rem;font-weight:700;color:var(--obsidian)">${f.name}</p>
+        <p style="font-size:.72rem;color:var(--slate-light);margin-top:4px">${(f.size/1024/1024).toFixed(2)} MB · <span style="color:var(--teal);cursor:pointer" onclick="clearFile()">Cambiar</span></p>`;
+    }
+    function clearFile() {
+      document.getElementById('archivoEstudio').value = '';
+      document.getElementById('fileDropContent').innerHTML = `
+        <i class="fas fa-cloud-arrow-up" style="font-size:1.8rem;color:var(--teal);opacity:.5;display:block;margin-bottom:8px"></i>
+        <p style="font-size:.82rem;font-weight:600;color:var(--slate)">Haz clic para seleccionar</p>
+        <p style="font-size:.72rem;color:var(--slate-light);margin-top:4px">PDF, JPG, PNG · Máximo 5 MB</p>`;
+    }
 
-        // XOR key — feel free to change all values (keep length at 11)
-        const _k = [0x4F, 0x53, 0x52, 0x45, 0x48, 0x41, 0x42, 0x32, 0x30, 0x32, 0x35];
+    async function registrarPaciente() {
+      if (!navigator.onLine) return showToast('Sin conexión a internet.', 'error');
+      const nombreOk = validateField(document.getElementById('nombre'), { required:true, minLen:3 });
+      const emailOk  = validateField(document.getElementById('email'),  { required:true, email:true });
+      if (!nombreOk || !emailOk) return showToast('Revisa los campos requeridos.', 'warning');
 
-        // Encoded Drive Folder ID: "12It2DNPQVwRI4ZDfXgfvqM1CgaAsjk4-"
-        const _fid = [0x7e,0x61,0x1b,0x31,0x7a,0x05,0x0c,0x62,0x61,0x64,0x42,0x1d,0x1a,0x66,0x1f,0x0c,0x27,0x1a,0x55,0x56,0x44,0x44,0x02,0x62,0x11,0x22,0x29,0x00,0x31,0x58,0x5b,0x06,0x18];
+      const datos = {
+        nombre:       document.getElementById('nombre').value.trim(),
+        email:        document.getElementById('email').value.trim(),
+        telefono:     document.getElementById('telefono').value.trim(),
+        fechaNac:     document.getElementById('fechaNac').value,
+        genero:       document.getElementById('genero').value,
+        antecedentes: document.getElementById('antecedentes').value.trim(),
+        motivo:       document.getElementById('motivo').value.trim(),
+        estudiosUrl:  document.getElementById('estudiosUrl').value.trim()
+      };
 
-        // Decode at runtime only
-        function _decode(b) { return b.map((v,i) => String.fromCharCode(v ^ _k[i % _k.length])).join(''); }
+      const file = document.getElementById('archivoEstudio').files[0];
+      if (file) {
+        if (file.size > 5 * 1024 * 1024) return showToast('El archivo supera 5 MB. Usa un enlace de Drive.', 'warning');
+        try {
+          datos.archivoBase64 = await fileToBase64(file);
+          datos.archivoNombre = file.name;
+        } catch { showToast('No se pudo leer el archivo.', 'warning'); }
+      }
 
-        // Helper to generate a new encoded array (run in console only)
-        function _encode(str) { return Array.from(str).map((c,i) => c.charCodeAt(0) ^ _k[i % _k.length]); }
+      const btn = document.getElementById('btnRegistrar');
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Procesando…';
 
-        // GAS endpoint (protected by URL shortener — do not expose the real URL)
-        const API_URL = "https://tinyurl.com/22aexuz9";
+      try {
+        const res = await apiPost('REGISTRAR_PACIENTE', datos);
+        document.getElementById('generatedId').textContent = res.id;
+        document.getElementById('successPanel').style.display = 'block';
+        document.getElementById('registroForm') && document.getElementById('registroForm').reset();
+        // Clear all validation states
+        document.querySelectorAll('.input-field.valid,.input-field.error').forEach(el => el.classList.remove('valid','error'));
+        document.querySelectorAll('.field-error-msg').forEach(el => el.remove());
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        showToast('Paciente registrado exitosamente ✓', 'success', 6000);
+      } catch(e) {
+        showToast('Error al registrar: ' + e.message, 'error');
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fas fa-user-check"></i> Finalizar Registro de Paciente';
+      }
+    }
 
-        // ── Drag & Drop ──────────────────────────────────────────────────────
-        function handleDragOver(e) { e.preventDefault(); document.getElementById('dropZone').classList.add('dragover'); }
-        function handleDragLeave()  { document.getElementById('dropZone').classList.remove('dragover'); }
-        function handleDrop(e) {
-            e.preventDefault();
-            document.getElementById('dropZone').classList.remove('dragover');
-            const file = e.dataTransfer.files[0];
-            if (file) applyFile(file);
-        }
-
-        function mostrarArchivo(input) {
-            if (input.files && input.files[0]) applyFile(input.files[0]);
-        }
-
-        function applyFile(file) {
-            if (file.size > 5 * 1024 * 1024) {
-                alert("El archivo supera 5 MB. Por favor elige uno más pequeño.");
-                return;
-            }
-            // Inject file into the hidden input via DataTransfer
-            try {
-                const dt = new DataTransfer();
-                dt.items.add(file);
-                document.getElementById('archivoEstudio').files = dt.files;
-            } catch(e) { /* fallback: file already set by native input */ }
-
-            document.getElementById('fileName').textContent = file.name + ' (' + (file.size / 1024).toFixed(1) + ' KB)';
-            document.getElementById('fileInfo').style.display = 'block';
-        }
-
-        function clearFile() {
-            document.getElementById('archivoEstudio').value = '';
-            document.getElementById('fileInfo').style.display = 'none';
-            document.getElementById('fileName').textContent = '';
-        }
-
-        // ── File → Base64 ────────────────────────────────────────────────────
-        function fileToBase64(file) {
-            return new Promise((res, rej) => {
-                const r = new FileReader();
-                r.onload  = () => res(r.result.split(',')[1]);
-                r.onerror = () => rej(new Error('No se pudo leer el archivo.'));
-                r.readAsDataURL(file);
-            });
-        }
-
-        // ── Registration ─────────────────────────────────────────────────────
-        async function registrarPaciente(event) {
-            const btn = document.getElementById('btnRegistrar');
-
-            const datos = {
-                nombre:       document.getElementById('nombre').value.trim(),
-                email:        document.getElementById('email').value.trim(),
-                telefono:     document.getElementById('telefono').value.trim(),
-                fechaNac:     document.getElementById('fechaNac').value,
-                genero:       document.getElementById('genero').value,
-                antecedentes: document.getElementById('antecedentes').value.trim(),
-                motivo:       document.getElementById('motivo').value.trim(),
-                estudiosUrl:  document.getElementById('estudiosUrl').value.trim()
-            };
-
-            if (!datos.nombre || !datos.email) {
-                alert("Por favor complete nombre y correo electrónico.");
-                return;
-            }
-
-            // Attach file if present — folder ID decoded only here, in memory
-            const archivoInput = document.getElementById('archivoEstudio');
-            if (archivoInput.files && archivoInput.files[0]) {
-                const file = archivoInput.files[0];
-                try {
-                    datos.archivo        = await fileToBase64(file);
-                    datos.archivoNombre  = file.name;
-                    datos.archivoTipo    = file.type;
-                    datos.driveFolderId  = _decode(_fid); // ← assembled in memory, never in source
-                } catch(err) {
-                    alert("Error al procesar el archivo: " + err.message);
-                    return;
-                }
-            }
-
-            btn.disabled = true;
-            btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> PROCESANDO...';
-
-            try {
-                const resp = await fetch(API_URL, {
-                    method: 'POST',
-                    body: JSON.stringify({ accion: 'REGISTRAR_PACIENTE', datos })
-                });
-                const res = await resp.json();
-
-                if (res.status === "Success") {
-                    document.getElementById('idPacienteModal').textContent = res.id;
-                    document.getElementById('modalExito').classList.remove('hidden');
-                    document.getElementById('registroForm').reset();
-                    clearFile();
-                } else {
-                    alert("Error: " + (res.error || "Por favor intenta de nuevo."));
-                }
-            } catch(e) {
-                alert("Error de conexión: " + e.toString());
-            } finally {
-                btn.disabled = false;
-                btn.innerHTML = '<i class="fas fa-user-plus mr-2"></i> FINALIZAR REGISTRO DE PACIENTE';
-            }
-        }
-
-        function cerrarModal() {
-            document.getElementById('modalExito').classList.add('hidden');
-        }
-    </script>
-
-</body>
-</html>
+    function copyPat
