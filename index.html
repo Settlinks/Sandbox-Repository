@@ -80,16 +80,16 @@
       <div>
         <label class="field-label">PIN de acceso</label>
         <input type="password" id="loginPin" class="input-field" placeholder="••••••"
-               maxlength="6" onkeydown="if(event.key==='Enter')login()">
+               maxlength="6" oninput="this.value=this.value.replace(/\s/g,'')" onkeydown="if(event.key==='Enter')login()">
       </div>
       <div>
         <label class="field-label">
           Código 2FA
           <span style="font-weight:400;text-transform:none;letter-spacing:0;margin-left:6px;font-size:.65rem;opacity:.6">(solo Admin / Presidente)</span>
         </label>
-        <input type="text" id="loginOtp" class="input-field" placeholder="000 000"
+        <input type="text" id="loginOtp" class="input-field" placeholder="000000"
                style="font-family:'DM Mono',monospace;letter-spacing:.25em;font-size:1.1rem;text-align:center"
-               maxlength="6" onkeydown="if(event.key==='Enter')login()">
+               maxlength="7" oninput="this.value=this.value.replace(/\s/g,'')" onkeydown="if(event.key==='Enter')login()">
       </div>
 
       <button id="loginBtn" onclick="login()" class="btn btn-primary btn-lg" style="width:100%;margin-top:4px">
@@ -755,7 +755,7 @@ async function login() {
     const res = await apiPost('LOGIN', { comunidadId: document.getElementById('loginComunidad').value.trim() }, {
       usuario: document.getElementById('loginUsuario').value.trim(),
       pin:     document.getElementById('loginPin').value.trim(),
-      otpCode: document.getElementById('loginOtp').value.trim(),
+      otpCode: document.getElementById('loginOtp').value.replace(/\s/g, '').trim(),
       comunidadId: document.getElementById('loginComunidad').value.trim()
     });
     Session.set({
