@@ -16,7 +16,7 @@ const _d = b => b.map((v,i) => String.fromCharCode(v ^ _k[i % _k.length])).join(
 
 // PLACEHOLDER — replace with encoded GAS deployment URL
 // Run README encoder script to get your value
-const _EU = [39,39,38,53,59,123,109,29,68,91,91,54,38,32,41,102,34,45,95,31,0,6,40,48,61,118,124,45];  // placeholder, yields "CONFIGURE_ME"
+const _EU = [ 56, 59, 38, 36, 50, 118, 27, 29, 67, 81, 71, 57, 63, 38, 122, 38, 35, 91, 85, 92, 87, 27, 51, 32, 63, 123, 44, 45, 87, 64, 95, 65, 26, 35, 96, 19, 31, 39, 53, 87, 80, 74, 10, 99, 52, 58, 7, 16, 14, 9, 122, 64, 99, 70, 3, 25, 39, 32, 28, 37, 52, 66, 72, 120, 90, 97, 60, 31, 8, 44, 6, 58, 87, 71, 95, 113, 119, 125, 41, 48, 31, 36, 58, 0, 96, 71, 94, 121, 21, 24, 1, 54, 2, 28, 89, 107, 125, 102, 98, 35, 37, 107, 58, 37, 6, 91, 5, 69, 99, 26, 53, 55, 55, 55 ];  // placeholder, yields "CONFIGURE_ME"
 
 const API_URL = (() => {
   try { return _d(_EU); } catch { return ''; }
